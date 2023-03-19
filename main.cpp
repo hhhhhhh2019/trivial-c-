@@ -5,48 +5,53 @@
 #include <stdio.h>
 
 
-char rand() {
+unsigned long rand() {
 	FILE* f = fopen("/dev/urandom", "rb");
-	char r;
-	fread(&r, 1, 1, f);
+	unsigned long r;
+	fread(&r, 8, 1, f);
 	fclose(f);
 	return r;
 }
 
 
 int main() {
-	int N = 15;
-	int K = 9;
+	int N = 255;
+	int K = 128;
 
-	GPoly p(9, GNum(1),GNum(2),GNum(3),GNum(4),GNum(5),GNum(6),GNum(7),GNum(8),GNum(9));
+	GPoly g = gen_g(N-K+1);
 
-	GPoly g(7, GNum(12),GNum(10),GNum(12),GNum(3),GNum(9),GNum(7),GNum(1));
+	FILE* f = fopen("data.bin", "rb");
 
-	for (int _ = 0; _ < 1000; _++) {
-		printf("----------\n");
+	fseek(f, 0L, SEEK_END);
+	int size = ftell(f);
+	fseek(f, 0, SEEK_SET);
 
-		GPoly c = encode(p, g, N, K);
+	int count = size / K;
 
-		for (int i = 0; i < 3; i++) {
-			int id = rand()%c.data.size();
-			int v = rand()%filed_size;
-			c.data[id] = GNum(v);
+	for (int i = 0; i < count; i++) {
+		unsigned char data[K];
 
-			printf("%d %d\n", id, v);
+		fread(data, K, 1, f);
+
+		GPoly p;
+
+		for (int j = 0; j < K; j++)
+			p.data.push_back(GNum(data[j]));
+
+
+		GPoly c = encode(p,g,N,K);
+
+		for (int e = 0; e < 63; e++) {
+			unsigned int id = rand() % N;
+			unsigned int v = rand() % filed_size;
+			c.data[id].value = v;
 		}
 
-		/*c.data[7] = GNum(1);
-		c.data[8] = GNum(5);
-		c.data[13] = GNum(4);*/
+		GPoly r = decode(c,g,N,K);
 
-		GPoly r = decode(c, g, N, K);
-
-		//p.print("p = ");
-		//r.print("r = ");
-
-		if (!(p == r)) {
+		if (!(r == p))
 			printf("error\n");
-			break;
-		}
 	}
+
+	fclose(f);
 }

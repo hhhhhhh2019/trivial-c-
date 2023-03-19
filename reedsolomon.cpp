@@ -14,6 +14,17 @@ int fpow(int n, int p) {
 }
 
 
+GPoly gen_g(int D) {
+	GPoly g(2, GNum(2), GNum(1));
+
+	for (int i = 2; i < D; i++) {
+		g *= GPoly(2, GNum(2).npow(i), GNum(1));
+	}
+
+	return g;
+}
+
+
 GPoly encode(GPoly p, GPoly g, int N, int K) {
 	GPoly p1 = p.mulXPow(N-K);
 	return p1 + (p1 % g);

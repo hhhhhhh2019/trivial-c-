@@ -296,10 +296,6 @@ GNum GPoly::solve(GNum x) {
 		result += x.npow(i) * data[i];
 	}
 
-	/*printf("%d ", x.value);
-	print("", false);
-	printf(" %d\n", result.value);*/
-
 	return result;
 }
 

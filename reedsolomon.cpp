@@ -79,16 +79,12 @@ GPoly decode(GPoly c, GPoly g, int N, int K) {
 	GPoly L1;
 
 	for (int i = L.data.size() - 1; i >= 1; i--) {
-		if ((i & 1) == 1) {//(L.data.size() & 1)) {
-			//L1.data.push_back(L.data[i]);
+		if ((i & 1) == 1) {
 			L1.data.insert(L1.data.begin(), L.data[i]);
 		} else {
-			//L1.data.push_back(GNum(0));
 			L1.data.insert(L1.data.begin(), GNum(0));
 		}
 	}
-
-	//L1.normalize();
 
 	GPoly X;
 
@@ -103,8 +99,6 @@ GPoly decode(GPoly c, GPoly g, int N, int K) {
 		W.data[i] = GNum(0);
 
 	GPoly Y;
-
-	//printf("--------\n");
 
 	for (int i = 0; i < X.data.size(); i++) {
 		GNum v = X.data[i];

@@ -2,7 +2,6 @@
 #include <gnum.h>
 #include <gpoly.h>
 #include <reedsolomon.h>
-#include <stdio.h>
 
 
 unsigned long rand() {
